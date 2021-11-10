@@ -13,7 +13,7 @@ def index(request):
 
 def post(request):
     if request.method == "POST":
-        author = request.POST['author']
+        author = request.user.username
         title = request.POST['title']
         content = request.POST['content']
         board = Board(author=author, title=title, content=content)
@@ -21,7 +21,7 @@ def post(request):
         return HttpResponseRedirect(reverse('board'))
     else:
         return render(request, 'board/write.html')
-    
+
     
 def detail(request, id):
     try:
@@ -30,10 +30,10 @@ def detail(request, id):
         raise Http404("Does not exist!")
     return render(request, 'board/detail.html', {'board': board})
 
+
 def edit(request,id):
     board = Board.objects.get(pk=id)
     if(request.method=="POST"):
-        board.author = request.POST['author']
         board.title = request.POST['title']
         board.content = request.POST['content']
         board.save()
@@ -47,3 +47,7 @@ def delete(request, id):
     board = Board.objects.get(pk=id)
     board.delete()
     return HttpResponseRedirect(reverse('board'))
+
+
+
+# board/views.py
